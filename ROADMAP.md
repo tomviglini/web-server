@@ -2,11 +2,11 @@
 
 ## Original Prompt
 
-I am sure that at some point this project had an "update" mechanism where, when a module changed, that module was rebuilt and updated live. I even remember that the data structure used to expose loaded modules had a specific behavior: it created a new array and remained non-blocking, so many reader threads could continue without lock contention. I do not remember every detail, but I do remember it was designed so readers did not need to block.
+I am sure this project once had an update mechanism: when a module changed, that module was rebuilt and reloaded live. I also remember that the data structure used to expose loaded modules had a very specific behavior: it created a new array and stayed non-blocking, so many reader threads could continue without lock contention. I do not remember every detail, but I do remember it was designed so readers did not have to block.
 
-Do not search in git history because it will not be there. I copied the whole project, and I think this part was broken at some point and I removed it.
+Do not search for this in git history because it will not be there. I copied the whole project, and I think this part broke at some point and I removed it.
 
-What I want to communicate is that the current codebase was originally shaped to make it easy to run a command (which is missing now) that would watch files, rebuild a module, and hot-load the updated code live. That is why I mention the current data structure pattern with non-blocking reader behavior.
+What I want to communicate is that the current codebase was originally shaped to make it easy to run a command (now missing) that would watch files, rebuild a module, and hot-load updated code live. That is why I mention the current data-structure pattern with non-blocking reader behavior.
 
 ## Historical Context
 
