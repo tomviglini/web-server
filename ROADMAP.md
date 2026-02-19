@@ -1,6 +1,6 @@
 # ROADMAP
 
-## Original Prompt (Translated to English)
+## Original Prompt
 
 I am sure that at some point this project had an "update" mechanism where, when a module changed, that module was rebuilt and updated live. I even remember that the data structure used to expose loaded modules had a specific behavior: it created a new array and remained non-blocking, so many reader threads could continue without lock contention. I do not remember every detail, but I do remember it was designed so readers did not need to block.
 
