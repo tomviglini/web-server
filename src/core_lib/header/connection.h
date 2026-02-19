@@ -3,14 +3,14 @@
 
 struct CONNECTION_RECORD {
     /*unsigned int 	flags;*/
-    int                 listener;
-    unsigned int 	timeout;
-    int			worker;
+    int listener;
+    unsigned int timeout;
+    int worker;
 
     /* test */
-    unsigned int 	active;
-    unsigned int	busy;
-    unsigned int 	pending;
+    unsigned int active;
+    unsigned int busy;
+    unsigned int pending;
 };
 
 struct CONNECTION {

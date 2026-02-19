@@ -5,185 +5,132 @@
 #include "header/list.h"
 #include "header/file.h"
 
+__attribute__((always_inline)) void *bsearch(register const void *key, const void *base0,
+                                             size_t nmemb, register size_t size,
+                                             register int (*compar)(const void *, const void *)) {
+    register const char *base = base0;
+    register size_t lim;
+    register int cmp;
+    register const void *p;
 
+    for (lim = nmemb; lim != 0; lim >>= 1) {
+        p = base + (lim >> 1) * size;
 
+        cmp = (*compar)(key, p);
 
-
-
-__attribute__((always_inline))
-void *
-bsearch(
-	register const void *key,
-	const void *base0,
-	size_t nmemb,
-	register size_t size,
-	register int (*compar)(const void *, const void *)
-){
-	register const char *base = base0;
-	register size_t lim;
-	register int cmp;
-	register const void *p;
-
-	for (lim = nmemb; lim != 0; lim >>= 1) {
-		p = base + (lim >> 1) * size;
-
-		cmp = (*compar)(key, p);
-
-		if (cmp == 0)
-			return ((void *)p);
-		if (cmp > 0) {	/* key > p: move right */
-			base = (char *)p + size;
-			lim--;
-		}		/* else move left */
-	}
-	return (NULL);
+        if (cmp == 0)
+            return ((void *)p);
+        if (cmp > 0) { /* key > p: move right */
+            base = (char *)p + size;
+            lim--;
+        } /* else move left */
+    }
+    return (NULL);
 }
 
+int searchcompare(const void *node1, const void *node2) {
+    return strcmp((const char *)node1, (*(struct RECORD *const *)node2)->key);
 
+    /*if(
+            *(unsigned long *) node1 ==
+            ((unsigned long)(*(struct RECORD * const *) node2)->key)
 
+    ) 	return 0;
 
+    if(
+            *(unsigned long *) node1 >
+            ((unsigned long)(*(struct RECORD * const *) node2)->key)
 
-
-
-
-int
-searchcompare(const void *node1, const void *node2) {
-
-	return strcmp(
-		(const char *) node1,
-		(*(struct RECORD * const *) node2)->key
-	);
-
-
-	/*if(
-			*(unsigned long *) node1 ==
-			((unsigned long)(*(struct RECORD * const *) node2)->key)
-
-	) 	return 0;
-
-	if(
-			*(unsigned long *) node1 >
-			((unsigned long)(*(struct RECORD * const *) node2)->key)
-
-	) 	return 1;*/
-
-
+    ) 	return 1;*/
 }
 
-int
-sortcompare(const void *node1, const void *node2) {
+int sortcompare(const void *node1, const void *node2) {
+    return strcmp((*(struct RECORD *const *)node1)->key, (*(struct RECORD *const *)node2)->key);
 
-	return strcmp(
-		(*(struct RECORD * const *) node1)->key,
-		(*(struct RECORD * const *) node2)->key
-	);
+    /*if(
+            ((unsigned long)(*(struct RECORD * const *) node1)->key) ==
+            ((unsigned long)(*(struct RECORD * const *) node2)->key)
 
+    ) 	return 0;
 
-	/*if(
-			((unsigned long)(*(struct RECORD * const *) node1)->key) ==
-			((unsigned long)(*(struct RECORD * const *) node2)->key)
+    if(
+            ((unsigned long)(*(struct RECORD * const *) node1)->key) >
+            ((unsigned long)(*(struct RECORD * const *) node2)->key)
 
-	) 	return 0;
+    ) 	return 1;*/
 
-	if(
-			((unsigned long)(*(struct RECORD * const *) node1)->key) >
-			((unsigned long)(*(struct RECORD * const *) node2)->key)
-
-	) 	return 1;*/
-
-
-																								return -1;
-
+    return -1;
 }
 
-
-
-
-__attribute__((always_inline))
-void
-linit(struct LIST *list) {
-	list->size = 0;
-	list->record = NULL;
+__attribute__((always_inline)) void linit(struct LIST *list) {
+    list->size = 0;
+    list->record = NULL;
 }
 
-__attribute__((always_inline))
-void
-lfree(struct LIST *list, int(* free_val)(void *)) {
+__attribute__((always_inline)) void lfree(struct LIST *list, int (*free_val)(void *)) {
+    int i;
 
-	int i;
+    for (i = 0; i < list->size; i++) {
+        free(list->record[i]->key);
+        if (free_val != NULL) {
+            free_val(list->record[i]->val);
+        }
+    }
 
-	for(i = 0; i < list->size; i++) {
-		free(list->record[i]->key);
-		if(free_val != NULL) {
-			free_val(list->record[i]->val);
-		}
-	}
-
-	free(list->record);
-
+    free(list->record);
 }
 
-__attribute__((always_inline))
-void
-lset(struct LIST *list, struct RECORD **record, const char *key) {
+__attribute__((always_inline)) void lset(struct LIST *list, struct RECORD **record,
+                                         const char *key) {
+    if (list->size == 0) {
+        list->record = malloc(sizeof(struct RECORD *));
 
-	if(list->size == 0) {
+        list->record[0] = malloc(sizeof(struct RECORD));
 
-		list->record = malloc(sizeof(struct RECORD *));
+        list->record[0]->key = malloc(sizeof(char) * (strlen(key) + 1));
+        strcpy(list->record[0]->key, key);
 
-		list->record[0] = malloc(sizeof(struct RECORD));
+        *record = list->record[0];
 
-		list->record[0]->key = malloc(sizeof(char) * (strlen(key) + 1));
-		strcpy(list->record[0]->key, key);
+        list->size = 1;
+    } else {
+        int i;
+        struct RECORD **tmp;
 
-		*record = list->record[0];
+        tmp = malloc(sizeof(struct RECORD *) * (list->size + 1));
 
-		list->size = 1;
+        for (i = 0; i < list->size; i++) {
+            tmp[i] = list->record[i];
+        }
 
-	} else {
+        tmp[list->size] = malloc(sizeof(struct RECORD));
 
-		int i;
-		struct RECORD **tmp;
+        tmp[list->size]->key = malloc(sizeof(char) * (strlen(key) + 1));
 
-		tmp = malloc(sizeof(struct RECORD *) * (list->size + 1));
+        strcpy(tmp[list->size]->key, key);
 
-		for(i = 0; i < list->size; i++) {
-			tmp[i] = list->record[i];
-		}
+        *record = tmp[list->size];
 
-		tmp[list->size] = malloc(sizeof(struct RECORD));
+        free(list->record);
 
-		tmp[list->size]->key = malloc(sizeof(char) * (strlen(key) + 1));
+        list->record = tmp;
 
-		strcpy(tmp[list->size]->key, key);
+        list->size++;
 
-		*record = tmp[list->size];
-
-		free(list->record);
-
-		list->record = tmp;
-
-		list->size++;
-
-		qsort(list->record, list->size, sizeof(list->record[0]), sortcompare);
-
-	}
-
+        qsort(list->record, list->size, sizeof(list->record[0]), sortcompare);
+    }
 }
 
+__attribute__((always_inline)) void lget(struct LIST *list, struct RECORD **record,
+                                         const char *key) {
+    if (list->size == 0) {
+        *record = NULL;
+        return;
+    }
 
-__attribute__((always_inline))
-void
-lget(struct LIST *list, struct RECORD **record, const char *key) {
+    *record = bsearch(key, list->record, list->size, sizeof(list->record[0]), searchcompare);
 
-	if(list->size == 0) {
-		*record = NULL;
-		return;
-	}
-
-	*record = bsearch(key, list->record, list->size, sizeof(list->record[0]), searchcompare);
-
-	if(*record != NULL) {
-		*record = *(struct RECORD **) *record;
-	}
+    if (*record != NULL) {
+        *record = *(struct RECORD **)*record;
+    }
 }

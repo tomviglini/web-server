@@ -4,13 +4,13 @@
 #include "list.h"
 
 struct TABLE {
-	struct LIST apath;
-	struct LIST rpath;
-	unsigned int used;
+    struct LIST apath;
+    struct LIST rpath;
+    unsigned int used;
 };
 
-void table_create	(struct TABLE **table);
-void table_free		(struct TABLE *table);
-void table_init		(struct TABLE *table);
+void table_create(struct TABLE **table);
+void table_free(struct TABLE *table);
+void table_init(struct TABLE *table);
 
 #endif /* TABLE_H */

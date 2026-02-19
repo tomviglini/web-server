@@ -5,8 +5,8 @@
 #include <core_lib/header/http_response.h>
 
 struct SYSTEM {
-	struct HTTP_REQUEST 	Request;
-	struct HTTP_RESPONSE 	Response;
+    struct HTTP_REQUEST Request;
+    struct HTTP_RESPONSE Response;
 };
 
 void system_init(struct SYSTEM *System);

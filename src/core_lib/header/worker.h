@@ -9,14 +9,14 @@
 #define WORKER_RECORD_CLOSE_WHILE_BUSY 1
 
 struct WORKER_RECORD {
-	/*unsigned int flags;*/
+    /*unsigned int flags;*/
 
-	/* test */
-	unsigned int close_while_busy;
+    /* test */
+    unsigned int close_while_busy;
 };
 
 struct WORKER {
-	struct WORKER_RECORD *record;
+    struct WORKER_RECORD *record;
 };
 
 void worker_init(struct WORKER *worker, int size);

@@ -4,12 +4,11 @@
 #include "../core_lib/header/table.h"
 
 struct DATABASE {
-	//struct TABLE *current;
-	//struct TABLE *old;
+    // struct TABLE *current;
+    // struct TABLE *old;
 
-
-	int current;
-	int used[2];
+    int current;
+    int used[2];
 };
 
 void database_init(struct DATABASE *database);
