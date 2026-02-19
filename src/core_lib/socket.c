@@ -62,7 +62,7 @@ __attribute__((always_inline)) int _socket_accept(int *socket_fd, int *accepted_
                                                   socklen_t *address_len) {
     //*accepted_fd = accept(*socket_fd, (struct sockaddr *) address, address_len);
 
-    /* the kernel 2.6.28 en adelante */
+    /* kernel 2.6.28 and later */
 
     *accepted_fd = accept4(*socket_fd, (struct sockaddr *)address, address_len, O_NONBLOCK);
 

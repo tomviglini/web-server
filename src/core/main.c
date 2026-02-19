@@ -423,12 +423,12 @@ void *worker(void *t) {
 
                 pending = 0;
 
-                /* a ser remplazado start */
+                /* to be replaced start */
 
                 /* decrement the previous used count */
                 // if(table != NULL) { table->used--; }
 
-                /* a ser remplazado end */
+                /* to be replaced end */
 
                 /* test start */
 
@@ -483,12 +483,12 @@ void *worker(void *t) {
                 // *pending implementation*
                 // if no all the data were written the table/connection must not be release/close
 
-                /* a ser remplazado start */
+                /* to be replaced start */
 
                 /* decrement the previous used count */
                 // if(table != NULL) { table->used--; }
 
-                /* a ser remplazado end */
+                /* to be replaced end */
 
                 /* test start */
 
@@ -526,7 +526,7 @@ void *worker(void *t) {
                 /* turn off the flag PENDING_READ */
                 server->connection.record[queue_value].pending = 0;
 
-                /* a ser remplazado start */
+                /* to be replaced start */
 
                 /* increment the used count */
                 // server->database.current->used++;
@@ -534,12 +534,12 @@ void *worker(void *t) {
                 /* get the current table */
                 // table = server->database.current;
 
-                /* a ser remplazado end */
+                /* to be replaced end */
 
                 /* test start */
 
-                /* en vez de sacar el puntero a la tabla global saco el numero de la tabla local,
-                 * todas las tablas van a tener que updatearse para poner pasar a current 0/1*/
+                /* instead of taking the global table pointer, take the local table index;
+                 * all tables would need to be updated to switch current between 0/1 */
                 current_database = server->database.current;
 
                 /* increment the used count */
@@ -711,11 +711,11 @@ void *worker(void *t) {
 
                     argv[0] = ((struct RECORD *)record2->val)->key;
 
-                    // si no defino cada vez el puntero al sistema crashea "no tendria que pasar"
-                    // hay que investigar
+                    // if I do not set the system pointer each time, it crashes
+                    // this should not happen and needs investigation
                     argv[1] = (char *)&System;
 
-                    // para probar voy a pasarle tambien SERVER para que el script pueda hacer todo
+                    // for testing, also pass SERVER so the script can do everything
                     argv[2] = (char *)server;
 
                     // func_result = ((struct DYNAMIC *)((struct PATH *)((struct RECORD
