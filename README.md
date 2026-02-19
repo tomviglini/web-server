@@ -69,6 +69,63 @@ Then open the example host using port `8080`:
 http://example.com:8080
 ```
 
+## Quick guide: key places to edit (simple example)
+
+If you want to modify the example quickly, these are the most important places.
+
+### 1) Where routes and modules are loaded
+
+file `src/core/main.c`
+
+```c
+void parse(struct SERVER *server) {
+    int socket_fd;
+    struct RECORD *host;
+    void *handle;
+
+    socket_fd = listen_create(server, "0.0.0.0", "8080");
+    host = hostname_create(server, socket_fd, "example.com:8080");
+
+    handle = dlopen("modules/module1.so", RTLD_NOW | RTLD_LOCAL);
+
+    load(server, host, handle, "/action1", "action1");
+    load(server, host, handle, "/action2", "action2");
+    load(server, host, handle, "/action3", "action3");
+}
+```
+
+This is the routing map: URL path (`/action1`) -> C function name (`action1`) inside the loaded module.
+
+### 2) Where module logic lives (`module2`)
+
+file `src/manager/modules/module2/src/app.c`
+
+```c
+int action1(int argc, char *argv[]) {
+    _print(_system(argv), "action1");
+    return HTTP_200;
+}
+
+int action2(int argc, char *argv[]) {
+    _print(_system(argv), "action2");
+    return HTTP_200;
+}
+```
+
+This is where you change behavior for each endpoint.
+
+### 3) How to run `module2`
+
+1. Build module2 so `modules/module2.so` exists.
+2. In `src/core/main.c` inside `parse(server)`, change:
+   - `dlopen("modules/module1.so", ...)`
+   - to `dlopen("modules/module2.so", ...)`
+3. Restart the server.
+
+After that, `/action1`, `/action2`, `/action3` will run the functions from `module2`.
+
+> Mental model: `parse()` decides **which URL calls which function**, and each module `app.c` decides **what that function does**.
+
 ## Formatting notes
 
 The repository includes `.clang-format` and `.editorconfig`.
