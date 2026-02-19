@@ -1,0 +1,28 @@
+{
+  "version": 4,
+  "configurations": [
+    {
+      "name": "Linux",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "c11",
+      "intelliSenseMode": "linux-gcc-x64",
+      "defines": ["_GNU_SOURCE", "_XOPEN_SOURCE=500"],
+      "includePath": [
+        "${workspaceFolder}",
+        "${workspaceFolder}/src",
+        "${workspaceFolder}/src/**",
+        "${workspaceFolder}/misc/**"
+      ],
+      "browse": {
+        "path": [
+          "${workspaceFolder}",
+          "${workspaceFolder}/src",
+          "${workspaceFolder}/src/**",
+          "${workspaceFolder}/misc/**"
+        ],
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "compileCommands": "${workspaceFolder}/compile_commands.json"
+    }
+  ]
+}

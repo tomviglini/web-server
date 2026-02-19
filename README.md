@@ -35,6 +35,36 @@ This script builds:
 - the core binary (`main`)
 - example modules in `modules/`
 
+### Optional: generate `compile_commands.json` (recommended for Ctrl+Click)
+
+If your editor is not navigating correctly to C function definitions, generate a
+`compile_commands.json` file from the current Make-based build.
+
+This does **not** replace your Makefiles and does **not** change how the project compiles.
+
+1. Install Bear:
+
+```bash
+sudo apt install -y bear
+```
+
+2. Generate the compilation database using your existing build flow:
+
+```bash
+chmod +x install.sh
+bear -- ./install.sh
+```
+
+If you get a permission error, you can also run:
+
+```bash
+bear -- bash install.sh
+```
+
+This produces `compile_commands.json` at the project root, which is used by many tools
+(VS Code C/C++, clangd, CLion, etc.) to resolve includes/defines and improve
+Go to Definition / Ctrl+Click.
+
 ### 3) Add host entry for the example
 
 To make the `example.com` host used by this project resolve locally, add this line to `/etc/hosts`:
